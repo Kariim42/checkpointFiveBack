@@ -1,6 +1,7 @@
 package com.checkpointFiveBack.checkpointFiveBack.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +33,6 @@ public class PostService {
 	}
 	
 	public void modifyPost(PostDto postDto, Long id) {
-		if (postRepository.existsByTitle(postDto.getTitle())) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Post already exists");
-		}
 		Post existingPost = postRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 		existingPost.setTitle(postDto.getTitle());
@@ -48,7 +46,13 @@ public class PostService {
 		newPost.setDescription(post.getDescription());
 		postRepository.save(newPost);
 		return new ResponseEntity<>("Post " + post.getTitle() + " will be created successfully !", HttpStatus.OK);
-	
 	}
+	
+	public Optional<Post> getOnePost(Long id) {
+		return postRepository.findById(id);
+	}
+	
+	
+
 	
 }
